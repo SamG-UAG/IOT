@@ -26,7 +26,7 @@ typedef struct{
     uint8_t bLENGTH;
 }cPingReq;
 
-sConnect vfnCreateFrame(char *argv, uint16_t wNum);
+sConnect vfnConnect(char *argv, uint16_t wNum);
 sConnAck vfnConnAck(char *argv, uint8_t Connection);
 cPingReq vfnRequest();
 sPingResp vfnResponse();

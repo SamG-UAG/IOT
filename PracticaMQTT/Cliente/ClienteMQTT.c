@@ -4,14 +4,17 @@
 #include <unistd.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <MQTT_FRAME.h>
 
 #define PORT 5050
 
 int main(int argc, char const *argv[]) {
-    int sock = 0, valread;
+    int sock = 0, valread, i;
     struct sockaddr_in serv_addr;
     char buffer[1024] = {0};
     char *hello = "Hello World";
+    char Client_ID[20];
+    sConnect connect_return;
 
     // Create socket
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
@@ -35,6 +38,11 @@ int main(int argc, char const *argv[]) {
         printf("\nConnection Failed \n");
         return -1;
     }
+
+    // FRAME CONNECT
+
+    connect_return = vfnConnect()
+
 
     // Send hello message to server
     send(sock, hello, strlen(hello), 0);

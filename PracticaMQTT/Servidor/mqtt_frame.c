@@ -1,12 +1,15 @@
 #include<MQTT_FRAME.h>
 #include<stdio.h>
 
-void vfnCreateFrame(char *argv, uint16_t wNum){
+void vfnConnect(char *argv, uint16_t wNum){
     sConnect sConnect_Frame;
     printf("Hello from  vfnCreateFrame");
 
     sConnect_Frame.bFRAME_TYPE = 0x10;
     sConnect_Frame.wLEN = wNum;
+    sConnect_Frame.bPROTOCOL_LEVEL = 0x0004;
+    sConnect_Frame.bCLEAN_SESSION = 0x02;
+    sConnect_Frame.bKEEP_ALIVES = 0x000A;
 
     return sConnect_Frame;
 }
