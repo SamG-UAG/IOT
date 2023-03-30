@@ -1,4 +1,4 @@
-#include <stdio.h>
+s#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <pthread.h>
@@ -11,7 +11,7 @@
 #include "com.h"
 #include "MQTT_FRAME.h"
 
-#define PORT 5050
+#define PORT 5051
 
 pthread_mutex_t socketMutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -23,18 +23,25 @@ int main(int argc, char const *argv[]) {
     ssize_t iWriteRc = 0;
     uint8_t* bpInstruction = (uint8_t*)malloc(10);
     sConnect connect_return;
+    sConnAck ConnAck_return;
 
         // FRAME CONNECT
 
     connect_return = vfnConnect((char *)argv[1], sizeof(argv[1]));
 
-    printf("This is the sFrameType 0x%x \r\n",connect_return.bFRAME_TYPE);
-	printf("This is the sFrameType 0x%x \r\n",connect_return.wLEN);
-    printf("This is the sFrameType 0x%x \r\n",connect_return.bPROTOCOL_LEVEL);
-    printf("This is the sFrameType %x \r\n",connect_return.bCLEAN_SESSION);
-    printf("This is the sFrameType 0x%x \r\n",connect_return.bKEEP_ALIVES);
-    printf("This is the sFrameType %s \r\n",connect_return.sClient_ID);
+    printf("This is the bFRAME_TYPE 0x%x \r\n",connect_return.bFRAME_TYPE);
+	printf("This is the wLEN 0x%x \r\n",connect_return.wLEN);
+    printf("This is the bPROTOCOL_LEVEL 0x%x \r\n",connect_return.bPROTOCOL_LEVEL);
+    printf("This is the bCLEAN_SESSION %x \r\n",connect_return.bCLEAN_SESSION);
+    printf("This is the bKEEP_ALIVES 0x%x \r\n",connect_return.bKEEP_ALIVES);
+    printf("This is the sClient_ID %s \r\n",connect_return.sClient_ID);
     
+    ConnAck_return = vfnConnAck((char *)argv[1], sizeof(argv[1]));
+
+    printf("This is the bMSG_TYPE 0x%x \r\n",ConnAck_return.bMSG_TYPE);
+    printf("This is the bLENGTH 0x%x \r\n",ConnAck_return.bLENGTH);
+    printf("This is the bTNCR_RESERVED 0x%x \r\n",ConnAck_return.bTNCR_RESERVED);
+    printf("This is the bCONNECT_RETURN 0x%x \r\n",ConnAck_return.bCONNECT_RETURN);
 
     // Create socket
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {

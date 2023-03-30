@@ -3,7 +3,9 @@
 
 sConnect vfnConnect(char *argv, uint16_t wNum){
     sConnect sConnect_Frame;
+    
     strcpy(sConnect_Frame.sClient_ID, argv);
+    
     sConnect_Frame.bFRAME_TYPE = 0x10;
     sConnect_Frame.wLEN = wNum;
     sConnect_Frame.bPROTOCOL_LEVEL = 0x0004;

@@ -10,12 +10,12 @@
 #include <errno.h>
 #include "com.h"
 
-#include "mqtt_frame.h"
+#include "MQTT_FRAME.h"
 
 
 #define DEBUG 1
 
-#define CONNECT_PORT 5050 //Port used for the next connection
+#define CONNECT_PORT 5051 //Port used for the next connection
 #define MAXSOCKETS   10   //Limit of sockets.
 
 //Global variables used by ptheads
@@ -38,7 +38,7 @@ int main(int argc , char *argv[])
 	sConnect sReturn;
 	printf("argv[] %s, sizeof %d \r\n",argv[1], strlen(argv[1]));
 
-	sReturn = vfnCreateFrame(argv[1], sizeof(argv[1]));
+	sReturn = vfnConnect(argv[1], sizeof(argv[1]));
 
 	printf("Server Init\n\r");
 	//Set IP information
@@ -103,7 +103,9 @@ void ServerClientThread(void * vpSocketTemp)
 	sFrame sFrameInfo;
 	dwpSocket = (int32_t *) vpSocketTemp;
 	char bpFramePtr [1024]={0};
+	sConnAck ConnAck_return;
 
+	sConnect *Client_Conn_Frame;
 	sFrameInfo.bSOF = 0x31;
 	sFrameInfo.bCMD= 0x35;
 
@@ -118,8 +120,24 @@ void ServerClientThread(void * vpSocketTemp)
 			//Write the message in the socket.
 			//ReadStatus = dwfnReadFrame(&sFrameInfo, *dwpSocket);
 			ssize_t Readstatus = read( *dwpSocket , bpFramePtr, 1024);
-			printf("The data rx %s \r\n", bpFramePtr);
-			printf("This is the Rx Frame \r\n");
+			Client_Conn_Frame = (sConnect *)bpFramePtr;
+			printf("The Client ID is 0%x \r\n", Client_Conn_Frame->bFRAME_TYPE);
+			printf("This is the Rx Frame 0%x \r\n",*bpFramePtr);
+			if(Client_Conn_Frame->bFRAME_TYPE == 0x10){
+				printf("1");
+				if(Client_Conn_Frame->bPROTOCOL_LEVEL == 0x0004){
+					printf("2");
+					if(Client_Conn_Frame->bCLEAN_SESSION == 0x02){
+						printf("3");
+						if(Client_Conn_Frame->bKEEP_ALIVES == 0x000A){
+							printf("Conection Successfull");
+							ConnAck_return = vfnConnAck (Client_Conn_Frame->sClient_ID, sizeof(Client_Conn_Frame->sClient_ID));
+						}
+					}
+				}
+			}
+
+
 #if DEBUG == 1
 			printf("bNumsocketIndex : %d\n",bNumsocketIndex);
 			printf("Reading to: %d\n",listSocket[bNumsocketIndex]);

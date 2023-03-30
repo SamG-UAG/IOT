@@ -9,9 +9,9 @@ sConnect vfnCreateFrame(char *argv, uint16_t wNum)
     sConnect sFrameConnect;
     printf("Hello From vfnCreateFrame");
 
-    sFrameConnect.bFrameType = 0x10;
-    sFrameConnect.wMsgLen = wNum;
-    sFrameConnect.wProtlNameLen = 0x0004;
+    sFrameConnect.bFrameType = 0x31;
+    sFrameConnect.wMsgLen = 0x32;//wNum;
+    sFrameConnect.wProtlNameLen = 0x0034;
     //Use String Copy
     sFrameConnect.sProtName [0]= 'M';
     sFrameConnect.sProtName [1]= 'Q';

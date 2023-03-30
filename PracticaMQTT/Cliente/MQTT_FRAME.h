@@ -8,13 +8,13 @@
 #include <arpa/inet.h> 
 #include <errno.h>
 
-typedef struct {
+typedef struct{
     uint8_t bFRAME_TYPE;
     uint16_t wLEN;
-    char sClient_ID [30];
     uint8_t bPROTOCOL_LEVEL;
     uint8_t bCLEAN_SESSION;
     uint16_t bKEEP_ALIVES;
+    char sClient_ID [100];
 }sConnect;
 
 typedef struct{

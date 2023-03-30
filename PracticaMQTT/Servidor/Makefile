@@ -1,7 +1,7 @@
 CC = gcc
-CFLAGS = -Wall-Werror -gcc
+#CFLAGS = -Wall -Werror 
 OUTPUT = server.o
-SOURCES = server.c com.c mqtt_frames
+SOURCES = ServidorMQTT.c com.c mqtt_frame.c
 LIBS = -pthread com.h
 
 all:

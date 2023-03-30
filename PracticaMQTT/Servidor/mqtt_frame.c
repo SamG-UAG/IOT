@@ -1,10 +1,10 @@
-#include<MQTT_FRAME.h>
+#include "MQTT_FRAME.h"
 #include<stdio.h>
 
-void vfnConnect(char *argv, uint16_t wNum){
+sConnect vfnConnect(char *argv, uint16_t wNum){
     sConnect sConnect_Frame;
-    printf("Hello from  vfnCreateFrame");
 
+    strcpy(sConnect_Frame.sClient_ID, argv);    
     sConnect_Frame.bFRAME_TYPE = 0x10;
     sConnect_Frame.wLEN = wNum;
     sConnect_Frame.bPROTOCOL_LEVEL = 0x0004;
@@ -14,7 +14,7 @@ void vfnConnect(char *argv, uint16_t wNum){
     return sConnect_Frame;
 }
 
-void vfnConnAck(char *argv, uint8_t Connection){
+sConnAck vfnConnAck(char *argv, uint8_t Connection){
     sConnAck ConnAck_Frame;
 
     ConnAck_Frame.bMSG_TYPE = 0x20;
@@ -25,7 +25,7 @@ void vfnConnAck(char *argv, uint8_t Connection){
     return ConnAck_Frame;
 }
 
-void vfnRequest(){
+cPingReq vfnRequest(){
     cPingReq Request_Frame;
 
     Request_Frame.bMSG_TYPE = 0xC0;
@@ -34,7 +34,7 @@ void vfnRequest(){
     return Request_Frame;
 }
 
-void vfnResponse(){
+sPingResp vfnRespon(){
     sPingResp Response_Frame;
 
     Response_Frame.bMSG_TYPE = 0xD0;

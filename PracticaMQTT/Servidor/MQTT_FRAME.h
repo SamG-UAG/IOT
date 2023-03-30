@@ -1,12 +1,20 @@
 #include <string.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
+#include <arpa/inet.h> 
+#include <errno.h>
 
 typedef struct{
     uint8_t bFRAME_TYPE;
     uint16_t wLEN;
-    char sClient_ID [];
     uint8_t bPROTOCOL_LEVEL;
     uint8_t bCLEAN_SESSION;
     uint16_t bKEEP_ALIVES;
+    char sClient_ID [100];
 }sConnect;
 
 typedef struct{
