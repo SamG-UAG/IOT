@@ -42,8 +42,15 @@ typedef struct{
     char MESSAGE[30];
 }Publish;
 
+typedef struct{
+    uint8_t bMSG_TYPE;
+    uint16_t TOPIC_LENGTH;
+    char TOPIC_NAME[30];
+}Subscribe;
+
 sConnect vfnConnect(char *argv, uint16_t wNum);
 sConnAck vfnConnAck(char *argv, uint8_t Connection);
 cPingReq vfnRequest();
 sPingResp vfnResponse();
 Publish vfnPublish(char *argv);
+Subscribe vfnSubscribe(char *argv);

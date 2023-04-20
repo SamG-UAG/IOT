@@ -55,4 +55,14 @@ Publish vfnPublish(char *argv){
 
     return Publish_frame;
 }
+
+Subscribe vfnSubscribe(char *argv){
+    Subscribe Subscribe_frame;
+
+    Subscribe_frame.bMSG_TYPE = 0x80;
+    Subscribe_frame.TOPIC_LENGTH = 0x07;
+    strcpy(Subscribe_frame.TOPIC_NAME, argv);
+
+    return Subscribe_frame;
+}
  

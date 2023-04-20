@@ -97,6 +97,7 @@ int main(int argc , char *argv[])
 
 void ServerClientThread(void * vpSocketTemp)
 {
+	int i = 0;
 	int32_t* dwpSocket;
 	uint8_t bNumsocketIndex = 0;
 	ssize_t ReadStatus = 0;
@@ -170,6 +171,11 @@ void ServerClientThread(void * vpSocketTemp)
 			{
 				publish_frame = (Publish *)bpFramePtr;
 				printf("Client Publish Message: ", publish_frame->MESSAGE);
+				/*for(i=0; i<MAXSOCKETS; i++){
+					if(listSocket != 0){
+						send(*dwpSocket , (char *)&publish_frame ,20,0);
+					}
+				} */
 			}
 			else{
 
