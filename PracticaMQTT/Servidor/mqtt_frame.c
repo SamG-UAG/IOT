@@ -42,3 +42,15 @@ sPingResp vfnRespon(){
 
     return Response_Frame;
 }
+
+Publish vfnPublish(char *argv){
+    Publish Publish_frame;
+    
+    Publish_frame.bMSG_TYPE = 0x30;
+    Publish_frame.TOPIC_LENGTH = 0x07;
+    strcpy(Publish_frame.TOPIC_NAME, "alarma1");
+    Publish_frame.MSG_LENGTH = 0x05;
+    strcpy(Publish_frame.MESSAGE, argv);
+
+    return Publish_frame;
+}

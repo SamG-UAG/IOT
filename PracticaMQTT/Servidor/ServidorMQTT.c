@@ -15,7 +15,7 @@
 
 #define DEBUG 1
 
-#define CONNECT_PORT 5051 //Port used for the next connection
+#define CONNECT_PORT 5055 //Port used for the next connection
 #define MAXSOCKETS   10   //Limit of sockets.
 
 //Global variables used by ptheads
@@ -109,34 +109,72 @@ void ServerClientThread(void * vpSocketTemp)
 	sFrameInfo.bSOF = 0x31;
 	sFrameInfo.bCMD= 0x35;
 
+	Publish *publish_frame;
+
+	//printf("Prueba thread");
+
     while (1)
     {
+		//printf("Prueba ciclo while");
+
         pthread_mutex_lock(&socketMutex);    
         //Send a messages to all the members connected.
         for (bNumsocketIndex = 0; bNumsocketIndex < 10; bNumsocketIndex++)
         {
+			//printf("Prueba ciclo for");
 			if (listSocket[bNumsocketIndex] != 0)
 			{
 			//Write the message in the socket.
 			//ReadStatus = dwfnReadFrame(&sFrameInfo, *dwpSocket);
+
+			//printf("Prueba if");
+
 			ssize_t Readstatus = read( *dwpSocket , bpFramePtr, 1024);
-			Client_Conn_Frame = (sConnect *)bpFramePtr;
+			
+			
+
+			/*printf("This is the bFRAME_TYPE 0x%x \r\n",Client_Conn_Frame->bFRAME_TYPE);
+			printf("This is the wLEN 0x%x \r\n",Client_Conn_Frame->wLEN);
+			printf("This is the bPROTOCOL_LEVEL 0x%x \r\n",Client_Conn_Frame->bPROTOCOL_LEVEL);
+			printf("This is the bCLEAN_SESSION %x \r\n",Client_Conn_Frame->bCLEAN_SESSION);
+			printf("This is the bKEEP_ALIVES 0x%x \r\n",Client_Conn_Frame->bKEEP_ALIVES);
+			printf("This is the sClient_ID %s \r\n",Client_Conn_Frame->sClient_ID);
+
 			printf("The Client ID is 0%x \r\n", Client_Conn_Frame->bFRAME_TYPE);
-			printf("This is the Rx Frame 0%x \r\n",*bpFramePtr);
-			if(Client_Conn_Frame->bFRAME_TYPE == 0x10){
+			printf("This is the Rx Frame 0%x \r\n",*bpFramePtr);*/
+			if(*bpFramePtr == 0x10){
+				Client_Conn_Frame = (sConnect *)bpFramePtr;
 				printf("1");
-				if(Client_Conn_Frame->bPROTOCOL_LEVEL == 0x0004){
+				if(Client_Conn_Frame->wLEN > 0){
 					printf("2");
-					if(Client_Conn_Frame->bCLEAN_SESSION == 0x02){
+					if(Client_Conn_Frame->bPROTOCOL_LEVEL == 0x0004){
 						printf("3");
-						if(Client_Conn_Frame->bKEEP_ALIVES == 0x000A){
-							printf("Conection Successfull");
-							ConnAck_return = vfnConnAck (Client_Conn_Frame->sClient_ID, sizeof(Client_Conn_Frame->sClient_ID));
+						if(Client_Conn_Frame->bCLEAN_SESSION == 0x02){
+							printf("4 \n");
+							if(Client_Conn_Frame->bKEEP_ALIVES == 0x000A){
+								printf("Conection Acknowledge\n");
+								ConnAck_return = vfnConnAck (Client_Conn_Frame->sClient_ID, sizeof(Client_Conn_Frame->sClient_ID));
+								
+								printf("This is the bMSG_TYPE 0x%x \r\n",ConnAck_return.bMSG_TYPE);
+								printf("This is the bLENGTH 0x%x \r\n",ConnAck_return.bLENGTH);
+								printf("This is the bTNCR_RESERVED 0x%x \r\n",ConnAck_return.bTNCR_RESERVED);
+								printf("This is the bCONNECT_RETURN 0x%x \r\n",ConnAck_return.bCONNECT_RETURN);
+
+								send(*dwpSocket , (char *)&ConnAck_return ,20,0);
+							}
 						}
-					}
+					}	
 				}
 			}
+			else if(*bpFramePtr == 0x30)
+			{
+				publish_frame = (Publish *)bpFramePtr;
+				printf("Client Publish Message: ", publish_frame->MESSAGE);
+			}
+			else{
 
+			}
+ 
 
 #if DEBUG == 1
 			printf("bNumsocketIndex : %d\n",bNumsocketIndex);

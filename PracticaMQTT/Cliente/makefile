@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Werror
+#CFLAGS = -Wall -Werror
 OUTPUT = client.out
 SOURCES = ClienteMQTT.c mqtt_frame.c
 LIBS = -pthread MQTT_FRAME.h
