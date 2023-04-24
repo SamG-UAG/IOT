@@ -14,10 +14,14 @@
 #include "MQTT_FRAME.h"
 
 #define PORT 5055
+#define TRUE 1
+#define FALSE 0
 
 pthread_mutex_t socketMutex = PTHREAD_MUTEX_INITIALIZER;
 
 cPingReq Ping_Request;
+
+int btnActivo = FALSE;
 
 void timer_handler(int signum){
 
@@ -67,12 +71,31 @@ void *Publish_Alert(void *argv){
     
     scanf("%i", &trigger);
 
-    char message[10] = {"Ayuda"};
+    char message[30];
+
     printf("\nalert function 1");
     
     if(trigger == 1){
+        strcpy(message, "Alerta:Ambulancia");
         publish_return = vfnPublish(message);
         printf("\nalert function 2");
+        btnActivo = TRUE;
+
+    }
+
+    if(trigger == 2){
+        strcpy(message, "Alerta:Policia");
+        publish_return = vfnPublish(message);
+        printf("\nalert function 2");
+        btnActivo = TRUE;
+
+    }
+
+    if(trigger == 3){
+        strcpy(message, "Alerta:Bomberos");
+        publish_return = vfnPublish(message);
+        printf("\nalert function 2");
+        btnActivo = TRUE;
 
     }
 }
@@ -88,6 +111,7 @@ int main(int argc, char const *argv[]) {
     sConnAck *ConnAck_return;
     char bpFramePtr [1024]={0};
     ssize_t ReadStatus = 0;
+    pthread_t th_Publish_Alert;
 
         // FRAME CONNECT
 
@@ -123,7 +147,7 @@ int main(int argc, char const *argv[]) {
         return -1;
     }
 
-    pthread_t th_Publish_Alert;
+    
     if(pthread_create (&th_Publish_Alert, NULL, Publish_Alert, NULL)){
             printf("\nalert thread");
     }
@@ -145,9 +169,13 @@ int main(int argc, char const *argv[]) {
     printf("This is the bCONNECT_RETURN 0x%x \r\n",ConnAck_return->bCONNECT_RETURN);
 
 
-    if(iWriteRc = send(sock , (char *)&Publish_Alert ,20,0)){
-        printf("\nSend alert");
-    }     
+    if(btnActivo == TRUE){
+        if(iWriteRc = send(sock , (char *)&Publish_Alert ,20,0)){
+            btnActivo = FALSE;
+            printf("\nSend alert");
+        }
+    }
+         
 
     while (1) {
         fgets((char*)bpInstruction, 10, stdin);
